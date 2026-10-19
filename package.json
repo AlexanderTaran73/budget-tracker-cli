@@ -8,7 +8,8 @@
     "start": "node dist/index.js",
     "dev": "tsc --watch",
     "calc": "node dist/calculation-demo.js",
-    "functions": "node dist/functions.js"
+    "functions": "node dist/functions.js",
+    "generics": "node dist/generics.js"
   },
   "keywords": [],
   "license": "ISC",
