@@ -3,10 +3,9 @@
 Консольное приложение для учёта личных финансов: счета, доходы, расходы и баланс.
 Учебный проект по курсу «Программирование на TypeScript».
 
-Сейчас в проекте реализованы:
-
-- классы `Transaction`, `Account` и `AccountManager` (тема 5 «Классы и ООП»);
-- универсальное хранилище `GenericStorage<T>` и класс `Product` (тема 6 «Generics»).
+Текущий этап — тема 7 «Модули и пространства имён»: каждый интерфейс и класс лежит в отдельном файле,
+все они объявлены в общем пространстве имён `BudgetTracker` и связаны через `/// <reference>`.
+Проект собирается в один файл `dist/budget-tracker.js`.
 
 ## Установка и запуск
 
@@ -18,23 +17,25 @@ npm run build
 npm start
 ```
 
-Остальные скрипты:
-
-- `npm run dev` — компиляция в режиме наблюдения
-- `npm run calc` — демо базовых вычислений (`calculation-demo.ts`)
-- `npm run functions` — демо функций для анализа бюджета (`functions.ts`)
-- `npm run generics` — демо обобщённого хранилища (`generics.ts`)
+`npm run dev` — компиляция в режиме наблюдения.
 
 ## Структура
 
 ```
 src/
-├── index.ts             — пример работы с классами
-├── classes.ts           — Transaction, Account, AccountManager
-├── types.ts             — интерфейсы и типы
-├── generics.ts          — GenericStorage<T>, Product
-├── functions.ts         — функции для подсчёта сумм и средних
-└── calculation-demo.ts  — простые вычисления бюджета
+├── interfaces/
+│   ├── TransactionType.ts
+│   ├── ITransaction.ts
+│   ├── IAccount.ts
+│   ├── ISummary.ts
+│   └── IAccountManager.ts
+├── classes/
+│   ├── Transaction.ts
+│   ├── Account.ts
+│   └── AccountManager.ts
+├── utils/
+│   └── format.ts        — форматирование сумм, дат и таблиц
+└── index.ts             — пример использования через BudgetTracker.*
 ```
 
 ## Классы
@@ -43,9 +44,9 @@ src/
 - **Account** — счёт с транзакциями. Геттеры `income`, `expenses`, `balance`, методы `addTransaction`, `removeTransactionById`, `getTransactions`, `getSummary`, `getSummaryString`. `toString()` выводит счёт таблицей.
 - **AccountManager** — список счетов и общая сводка: `addAccount`, `removeAccountById`, `getAccountById`, `getAllAccounts`, `getSummary`, `getSummaryString`, `toString()`.
 
-## Generics
+## Про сборку
 
-- **GenericStorage\<T extends Identifiable\>** — хранилище для любых объектов с числовым `id`: `add`, `removeById`, `getById`, `getAll` (возвращает копию массива) и `describeAll`. `describeAll` печатает `describe()` у элементов, которые его реализуют, а для остальных — `Элемент id: <id> не содержит описания.`
-- **Product** — товар (`id`, `name`, `price`), реализует `Identifiable` и `Describable`.
+Для namespace-сборки в `tsconfig.json` используются `"module": "none"` и `outFile`. В TypeScript 6 эти опции
+помечены устаревшими, поэтому добавлен `"ignoreDeprecations": "6.0"`, а версия TypeScript закреплена на 6.0.
 
-В демо хранилище используется и с `Product`, и с `Account` из `classes.ts`.
+Предыдущие этапы (классы в одном файле, generics) можно посмотреть в истории коммитов.
