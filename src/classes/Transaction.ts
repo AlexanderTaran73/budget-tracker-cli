@@ -1,37 +1,41 @@
-/// <reference path="../interfaces/ITransaction.ts" />
-/// <reference path="../utils/format.ts" />
+import { formatCurrency } from 'budget-utils';
+import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+import { ITransaction } from '../interfaces/ITransaction';
+import { TransactionType } from '../interfaces/TransactionType';
+import { formatDate, shortId, transactionTypeLabels } from '../utils/format';
 
-namespace BudgetTracker {
-  export class Transaction implements ITransaction {
-    constructor(
-      public readonly id: number,
-      public readonly amount: number,
-      public readonly type: TransactionType,
-      public readonly date: string,
-      public readonly description: string,
-    ) {
-      if (!Number.isFinite(amount) || amount <= 0) {
-        throw new Error(`Сумма транзакции должна быть больше нуля, получено: ${amount}`);
-      }
-      if (Number.isNaN(Date.parse(date))) {
-        throw new Error(`Некорректная дата транзакции: ${date}`);
-      }
-    }
+export class Transaction implements ITransaction {
+  readonly id: string;
 
-    get formattedAmount(): string {
-      return formatMoney(this.amount);
+  constructor(
+    public readonly amount: number,
+    public readonly type: TransactionType,
+    public readonly date: string,
+    public readonly description: string,
+  ) {
+    if (!Number.isFinite(amount) || amount <= 0) {
+      throw new Error(`Сумма транзакции должна быть больше нуля, получено: ${amount}`);
     }
+    if (!moment(date, moment.ISO_8601, true).isValid()) {
+      throw new Error(`Некорректная дата транзакции: ${date}`);
+    }
+    this.id = uuidv4();
+  }
 
-    get formattedDate(): string {
-      return formatDate(this.date);
-    }
+  get formattedAmount(): string {
+    return formatCurrency(this.amount);
+  }
 
-    get typeLabel(): string {
-      return transactionTypeLabels[this.type];
-    }
+  get formattedDate(): string {
+    return formatDate(this.date);
+  }
 
-    toString(): string {
-      return `#${this.id} ${this.description} (${this.typeLabel} ${this.formattedAmount}) | ${this.formattedDate}`;
-    }
+  get typeLabel(): string {
+    return transactionTypeLabels[this.type];
+  }
+
+  toString(): string {
+    return `#${shortId(this.id)} ${this.description} (${this.typeLabel} ${this.formattedAmount}) | ${this.formattedDate}`;
   }
 }

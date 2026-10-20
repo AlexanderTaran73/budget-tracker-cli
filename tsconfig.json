@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "none",
-    "moduleResolution": "node",
-    "outFile": "./dist/budget-tracker.js",
-    "ignoreDeprecations": "6.0",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "rootDir": "./src",
+    "noEmit": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "budget-utils": ["./src/lib/budget-utils.js"]
+    }
   },
-  "files": ["src/index.ts"]
+  "include": ["src"]
 }
