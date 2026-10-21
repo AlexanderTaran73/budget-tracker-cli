@@ -6,17 +6,24 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc"
+    "reset": "tsx src/index.ts --reset",
+    "debug": "tsx src/index.ts --debug",
+    "demo": "tsx src/demo.ts",
+    "build": "tsc",
+    "test": "vitest run"
   },
   "keywords": [],
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^26.6.5",
     "tsx": "^4.23.15",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
   },
   "dependencies": {
+    "inquirer": "^14.2.4",
     "moment": "^2.31.0",
+    "reflect-metadata": "^0.2.2",
     "uuid": "^14.0.3"
   }
 }
