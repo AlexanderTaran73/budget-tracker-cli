@@ -3,6 +3,7 @@ import inquirer from 'inquirer';
 import moment from 'moment';
 import { access } from 'node:fs/promises';
 import path from 'node:path';
+import { isDecoratorLoggingEnabled } from '../decorators/debug';
 import { TransactionType } from '../interfaces/TransactionType';
 import { CategoryLimits, TransactionConstructorParams } from '../interfaces/utility-types';
 import { transactionTypeLabels } from '../utils/format';
@@ -393,7 +394,12 @@ export class ApplicationController {
   }
 
   private showScreen(title: string): void {
-    console.clear();
+    // в режиме --debug экран не чистим, иначе логи декораторов сразу пропадают
+    if (isDecoratorLoggingEnabled()) {
+      console.log('\n' + '─'.repeat(60));
+    } else {
+      console.clear();
+    }
     console.log(`💰 Budget Tracker — ${title}\n`);
     if (this.notice) {
       console.log(this.notice + '\n');

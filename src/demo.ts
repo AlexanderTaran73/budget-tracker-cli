@@ -70,13 +70,23 @@ const nullable: NullableDescription = { ...preview, description: null };
 console.log({ preview, info, withoutDescription, nullable });
 
 console.log('\n--- Mapped / conditional types ---');
-const amount: TransactionFieldType<'amount'> = 300; // number
-const draft: OptionalTransaction<'description' | 'date'> = { id: 'draft', amount, type: 'expense' };
-const fixed: ReadonlyTransactionFields<'id' | 'type'> = { ...draft, date: '2023-03-01T00:00:00Z', description: 'Такси' };
+type AmountType = TransactionFieldType<'amount'>; // number
+type UnknownType = TransactionFieldType<'unknown'>; // never
+type TransactionWithOptionalDescAndDate = OptionalTransaction<'description' | 'date'>;
+type TransactionReadonlyIdAndType = ReadonlyTransactionFields<'id' | 'type'>;
+type CheckIncome1 = IsIncome<{ type: 'income'; amount: number }>; // true
+type CheckIncome2 = IsIncome<{ type: 'expense'; amount: number }>; // false
+type CheckIncome3 = IsIncome<ITransaction>; // false — type может быть и income, и expense
+
+const amount: AmountType = 300;
+const unknownFields: UnknownType[] = []; // в массив never ничего положить нельзя
+const draft: TransactionWithOptionalDescAndDate = { id: 'draft', amount, type: 'expense' };
+const fixed: TransactionReadonlyIdAndType = { ...draft, date: '2023-03-01T00:00:00Z', description: 'Такси' };
 // fixed.type = 'income'; — ошибка компиляции: поле только для чтения
-const isIncome: IsIncome<{ type: 'income'; amount: number }> = true;
-const isNotIncome: IsIncome<ITransaction> = false; // type может быть и income, и expense
-console.log({ draft, fixed, isIncome, isNotIncome });
+const isIncome: CheckIncome1 = true;
+const isExpenseIncome: CheckIncome2 = false;
+const isNotIncome: CheckIncome3 = false;
+console.log({ draft, fixed, unknownFields, isIncome, isExpenseIncome, isNotIncome });
 
 console.log('\n--- Экспорт в CSV ---');
 const csvPath = path.join(fileURLToPath(new URL('..', import.meta.url)), 'exports', 'main_account.csv');

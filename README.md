@@ -113,6 +113,40 @@ tests/                         — юнит-тесты
   `addTransaction`, `removeTransaction`, `removeAccount`, `exportTransactionsToCSV`.
 - **BudgetStorage** — чтение и запись JSON с проверкой структуры файла.
 
+## Темы курса в проекте
+
+| Тема | Где смотреть |
+|---|---|
+| 4. Интерфейсы и типы | `src/interfaces/` — `TransactionType`, `ITransaction`, `IAccount`, `ISummary`, `IAccountManager` |
+| 5. Классы и ООП | `src/classes/Transaction.ts`, `Account.ts`, `AccountManager.ts` |
+| 6. Generics | `src/classes/GenericStorage.ts` — хранилище для транзакций и счетов |
+| 7–8. Модули, declaration files | ES-модули, `src/lib/budget-utils.js` + `budget-utils.d.ts`, `uuid`, `moment` |
+| 9. Утилитные типы | `src/interfaces/utility-types.ts`, методы `update()` у `Transaction` и `Account` |
+| 10. Асинхронный код | `src/utils/escapeCsvValue.ts`, `Account.exportTransactionsToCSV()`, `BudgetStorage` |
+| 11. Conditional и mapped types | `src/interfaces/mapped-types.ts`, примеры в `src/demo.ts`, проверки типов в `tests/types.test.ts` |
+| 12. Декораторы | `src/decorators/`, см. раздел ниже |
+| Итоговое | `src/classes/ApplicationController.ts`, `src/index.ts` |
+
+## Декораторы (тема 12)
+
+| Декоратор | Файл | Где применяется |
+|---|---|---|
+| `@LogClass` — пишет `Создан экземпляр класса <имя> с аргументами: …` | `src/decorators/LogClass.ts` | класс `Account` |
+| `@LogMethod` — пишет `Вызов метода <имя> с аргументами: …` и `Метод <имя> вернул: …` | `src/decorators/LogMethod.ts` | `addTransaction`, `removeTransactionById`, `getTransactions` |
+| `@ReadOnly` — после первой установки значения бросает ошибку при попытке изменить свойство | `src/decorators/ReadOnly.ts` | `Account.id` (модификатор `readonly` убран) |
+| `@Metadata(key, value)` — сохраняет метаданные через `reflect-metadata` | `src/decorators/Metadata.ts` | `Account.transactions` — `@Metadata('description', 'Транзакции счёта')` |
+
+Описание из метаданных выводится в `Account.getSummaryString()`: `Личный бюджет: баланс 650 ₽, транзакции счёта: 3`.
+
+Как проверить:
+
+- `npm run demo` — пример по шаблону задания: создание счёта и транзакций с логами декораторов, попытка изменить `id`
+  (`Свойство "id" доступно только для чтения`) и вывод `getSummaryString()` с описанием из метаданных.
+  Пример вынесен в `src/demo.ts`, потому что `src/index.ts` в итоговом проекте запускает интерактивное меню.
+- `npm run debug` — обычное приложение, но с включёнными логами. Экран в этом режиме не очищается, поэтому видно,
+  какие методы вызываются при каждом действии в меню.
+- `tests/Account.test.ts` — тесты на `@ReadOnly` и `@Metadata`.
+
 ## Технические детали
 
 - TypeScript 6 в строгом режиме (`strict`), ES-модули.

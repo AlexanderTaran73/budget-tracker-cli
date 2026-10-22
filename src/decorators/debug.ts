@@ -5,6 +5,10 @@ export function setDecoratorLogging(enabled: boolean): void {
   loggingEnabled = enabled;
 }
 
+export function isDecoratorLoggingEnabled(): boolean {
+  return loggingEnabled;
+}
+
 export function debugLog(message: string): void {
   if (loggingEnabled) {
     console.log(`[debug] ${message}`);
